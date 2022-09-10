@@ -18,11 +18,18 @@ body {
     margin: auto;
     padding-bottom: 20px;
     width: 60%;
+    min-height: 75vh;
     border: 5px solid white;
     border-radius: 5px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+#player1Card,
+#player2Card {
+    visibility: hidden;
+    min-height: 315px;
 }
 
 #piles_and_result {
@@ -51,11 +58,18 @@ body {
 #pile1,
 #pile2 {
     position: absolute;
-    top: 20%;
-    left: 40%;
+    top: 23%;
+    left: 10%;
+    width: 150px;
     color: black;
     z-index: 1;
     font-size: 50px;
+    background-color: olivedrab;
+    border-radius: 50%;
+}
+
+#result {
+    height: 60px;
 }
 
 #deal_btn {
@@ -64,4 +78,5 @@ body {
     font-size: 20px;
     background-color: white;
     color: black;
+    cursor: pointer;
 }
