@@ -1,0 +1,29 @@
+* {
+    padding: 0;
+    margin: 20px;
+    box-sizing: border-box;
+    background-color: #2d5440;
+    text-align: center;
+}
+
+#title {
+    color: #ecf01a;
+}
+
+#playing_area {
+    margin: auto;
+    padding: 20px;
+    width: 60%;
+    border: 5px solid black;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#deal_btn {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+    background-color: #ecf01ad3;
+}
