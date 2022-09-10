@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="playing_card.png">
+    <link rel="icon" type="image/x-icon" href="./Assets/playing_card.png">
     <title>War</title>
     <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
@@ -13,11 +13,22 @@
     <h1 id="title">It's War!</h1>
     <div id="playing_area">
         <div id="player1">
-            <h2>Player 1</h2>
+            <h3 id="player1Text">Player 1</h3>
             <img id="player1Card" src="" alt="player 1 playing card">
         </div>
+        <div id="piles_and_result">
+            <div id="pile1_container">
+                <img class="playing_card_back" src="./Assets/playing_card_back.jpeg" alt="player 1's pile">
+                <p id="pile1">0</p>
+            </div>
+            <h2 id="result"></h2>
+            <div id="pile2_container">
+                <img class="playing_card_back" src="./Assets/playing_card_back.jpeg" alt="player 2's pile">
+                <p id="pile2">0</p>
+            </div>
+        </div>
         <div id="player2">
-            <h2>Player 2</h2>
+            <h3 id="player2Text">Player 2</h3>
             <img id="player2Card" src="" alt="player 2 playing card">
         </div>
     </div>
