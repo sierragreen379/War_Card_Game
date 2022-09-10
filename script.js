@@ -1,16 +1,19 @@
 // Grab items from the DOM
-const player1 = document.getElementById("player1Text");
-const player2 = document.getElementById("player2Text");
+// Image for card just drawn for each player
 const player1Card = document.getElementById("player1Card");
 const player2Card = document.getElementById("player2Card");
+// The piles that hold all cards won by each player
 const pile1 = document.getElementById("pile1");
 const pile2 = document.getElementById("pile2");
+// Text saying which player won that round
 const result = document.getElementById("result");
+// The button that makes everything work
 const dealBtn = document.getElementById("deal_btn");
 
 // Variable to use the same deck
 let deckId = localStorage.getItem("deckId");
 
+// Runs on page load. Gets a new deck and shuffles it, or takes a deck from localStorage that was already being used and shuffles that one
 const shuffleNewDeck = async () => {
     if (!deckId) {
         deckId = "new";
@@ -27,6 +30,7 @@ const shuffleNewDeck = async () => {
     }
 }
 
+// Main function that everthing goes in and out of. All other functions below this are helper functions to this one.
 const drawTwo = async() => {
     try {
         const response = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`);
@@ -54,7 +58,7 @@ const drawTwo = async() => {
             if (jsonResponse.remaining == 0) {
                 if (pile1Num > pile2Num) {
                     // Player 1 Wins
-                    // Change and flash background color on pile of winner
+                    // Change and flash background color on pile of winner. Use CSS animations?
                 } else {
                     // Player 2 Wins
                 }
@@ -105,5 +109,5 @@ const convertToNumber = (card) => {
 
 // Get a new shuffled deck when the page loads
 onload = shuffleNewDeck();
-// Display two cards from the deck when you hit the deal button
+// Display two cards from the deck when you hit the deal button, and then also run just about every other function in this file
 dealBtn.onclick = drawTwo;
