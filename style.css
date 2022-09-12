@@ -26,10 +26,28 @@ body {
     align-items: center;
 }
 
+#player1,
+#player2 {
+    position: relative;
+}
+
 #player1Card,
 #player2Card {
     visibility: hidden;
     min-height: 315px;
+}
+
+#player1_extra_card,
+#player2_extra_card {
+    visibility: hidden;
+    position: absolute;
+    top: 23.5%;
+    left: -27%;
+    rotate: 90deg;
+    height: 220px;
+    width: auto;
+    border-radius: 15px;
+    z-index: -1;
 }
 
 #piles_and_result {
