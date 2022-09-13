@@ -2,24 +2,23 @@
 // Image for card just drawn for each player
 const player1Card = document.getElementById("player1Card");
 const player2Card = document.getElementById("player2Card");
-// Background card image for each player, will use variable only to toggle visibility
+// Background card image for each player, will use variable only to toggle visibility during war rounds
 const player1ExtraCard = document.getElementById("player1_extra_card");
 const player2ExtraCard = document.getElementById("player2_extra_card");
-// The piles that hold all cards won by each player
+// The piles that hold cards won by each player
 const pile1 = document.getElementById("pile1");
 const pile2 = document.getElementById("pile2");
-// Text saying which player won that round
+// Get text that will say which player won that round
 const result = document.getElementById("result");
-// The button that makes everything work
 const dealBtn = document.getElementById("deal_btn");
 
-// Variable to use the same deck
+// Variable to use the same deck even after the browser is closed
 let deckId = localStorage.getItem("deckId");
 
-// Variable that holds the number of cards to be added to the winning player's pile
 let numOfCardsToAdd = 0;
+let numOfCardsDrawn = 0;
 
-// Runs on page load. Gets a new deck and shuffles it, or takes a deck from localStorage that was already being used and shuffles that one
+// Runs on page load. Gets a new deck and shuffles it, or takes a deck from localStorage that was already being used and shuffles that one, then deals to two players
 const shuffleAndDealDeck = async () => {
     if (!deckId) {
         deckId = "new";
@@ -45,8 +44,8 @@ const shuffleAndDealDeck = async () => {
                     pile2Parameter += `${jsonResponse2.cards[i].code},`;
                 }
                 // Add cards to appropriate piles
-                fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/add/?cards=${pile1Parameter}`);
-                fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/add/?cards=${pile2Parameter}`);
+                await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/add/?cards=${pile1Parameter}`);
+                await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/add/?cards=${pile2Parameter}`);
             }
         } catch (error) {
             console.log(error);
@@ -61,8 +60,8 @@ const drawCards = async() => {
     player1ExtraCard.style.visibility = "hidden";
     player2ExtraCard.style.visibility = "hidden";
     try {
-        const response1 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/draw/?count=1`);
-        const response2 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/draw/?count=1`);
+        const response1 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/draw/bottom/?count=1`);
+        const response2 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/draw/bottom/?count=1`);
         if (response1.ok && response2.ok) {
             const jsonResponse1 = await response1.json();
             const jsonResponse2 = await response2.json();
@@ -75,23 +74,19 @@ const drawCards = async() => {
             // Variables holding the cards' value ("KING", "9", etc.)
             let player1Val = jsonResponse1.cards[0].value;
             let player2Val = jsonResponse2.cards[0].value;
-            // Pass the card values into this function to compare them
-            compareCards(player1Val, player2Val);
+            let player1CardCode = jsonResponse1.cards[0].code;
+            let player2CardCode = jsonResponse2.cards[0].code;
+            compareCards(player1Val, player2Val, player1CardCode, player2CardCode);
 
             // Number of cards in each pile
             let pile1Num = Number(pile1.innerText);
             let pile2Num = Number(pile2.innerText);
 
             // When one player holds all of the cards, it's game over
-            if (pile1Num === 52 || pile2Num === 52) {
-                result.innerText = "Game Over!";
-                if (pile1Num === 52) {
-                    // Player 1 Wins
-                    // Change and flash background color on pile of winner. Use CSS animations?
-                    // could possibly use setInterval()
-                } else {
-                    // Player 2 Wins
-                }
+            if (pile1Num === 52) {
+                gameOver("player1");
+            } else if (pile2Num === 52) {
+                gameOver("player2");
             }
         }
     } catch (error) {
@@ -100,26 +95,38 @@ const drawCards = async() => {
 }
 
 // Call convertToNumber() to convert card values for easier comparison and then add cards to the winning player's pile
-const compareCards = (card1, card2) => {
+const compareCards = (card1, card2, code1, code2, code3, code4) => {
     let card1Num = convertToNumber(card1);
     let card2Num = convertToNumber(card2);
-    numOfCardsToAdd += 2;
+    numOfCardsToAdd++;
+    numOfCardsDrawn++;
     if (card1Num > card2Num) {
+        fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/add/?cards=${code1},${code2},${code3},${code4}`);
         pile1.innerText = Number(pile1.innerText) + numOfCardsToAdd;
+        pile2.innerText = Number(pile2.innerText) - numOfCardsDrawn;
+        console.log(`Subtracted ${numOfCardsDrawn} from player2`);
         result.innerText = "Player 1 Wins!";
         dealBtn.onclick = drawCards;
     } else if (card1Num < card2Num) {
+        fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/add/?cards=${code1},${code2},${code3},${code4}`);
         pile2.innerText = Number(pile2.innerText) + numOfCardsToAdd;
+        pile1.innerText = Number(pile1.innerText) - numOfCardsDrawn;
+        console.log(`Subtracted ${numOfCardsDrawn} from player1`);
         result.innerText = "Player 2 Wins!";
         dealBtn.onclick = drawCards;
     } else {
         result.innerText = "War!";
         dealBtn.onclick = drawCardsForWarRound;
+        pile1.innerText = Number(pile1.innerText) - numOfCardsDrawn;
+        pile2.innerText = Number(pile2.innerText) - numOfCardsDrawn;
+        numOfCardsDrawn--;
+        numOfCardsToAdd++;
     }
 
     // Reset number of cards to add to winning player's pile
     if (result.innerText !== "War!") {
         numOfCardsToAdd = 0;
+        numOfCardsDrawn = 0;
     }
 }
 
@@ -145,10 +152,11 @@ const convertToNumber = (card) => {
 }
 
 const drawCardsForWarRound = async () => {
-    numOfCardsToAdd += 2;
+    numOfCardsToAdd++;
+    numOfCardsDrawn++;
     try {
-        const response1 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/draw/?count=2`);
-        const response2 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/draw/?count=2`);
+        const response1 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/draw/bottom/?count=2`);
+        const response2 = await fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/draw/bottom/?count=2`);
         if (response1.ok && response2.ok) {
             const jsonResponse1 = await response1.json();
             const jsonResponse2 = await response2.json();
@@ -160,15 +168,40 @@ const drawCardsForWarRound = async () => {
             // Variables holding the cards' value ("KING", "9", etc.)
             let player1Val = jsonResponse1.cards[0].value;
             let player2Val = jsonResponse2.cards[0].value;
-            // Pass the card values into this function to compare them
-            compareCards(player1Val, player2Val);
+            let player1FirstCardCode = jsonResponse1.cards[0].code;
+            let player2FirstCardCode = jsonResponse2.cards[0].code;
+            let player1SecondCardCode = jsonResponse1.cards[1].code;
+            let player2SecondCardCode = jsonResponse2.cards[1].code;
+            compareCards(player1Val, player2Val, player1FirstCardCode, player2FirstCardCode, player1SecondCardCode, player2SecondCardCode);
         }
     } catch (error) {
         console.log(error);
     }
 }
 
-// Get a new shuffled deck when the page loads
+const gameOver = (winner) => {
+    result.innerText = "Game Over!";
+    const colors = ["blue", "red", "green", "orange", "yellow", "purple", "pink"];
+    let randomNum;
+    if (winner === "player1") {
+        setInterval(() => {
+            let excludeNum = randomNum;
+            while (randomNum === excludeNum) {
+                randomNum = Math.floor(Math.random() * colors.length);
+            }
+            pile1.style.backgroundColor = colors[randomNum];
+        }, 800);
+    } else {
+        setInterval(() => {
+            let excludeNum = randomNum;
+            while (randomNum === excludeNum) {
+                randomNum = Math.floor(Math.random() * colors.length);
+            }
+            pile2.style.backgroundColor = colors[randomNum];
+        }, 800);
+    }
+}
+
 onload = shuffleAndDealDeck();
-// Display two cards from the deck when you hit the deal button, and then also run just about every other function in this file
+
 dealBtn.onclick = drawCards;
