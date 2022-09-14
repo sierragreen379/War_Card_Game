@@ -83,9 +83,9 @@ const drawCards = async() => {
             let pile2Num = Number(pile2.innerText);
 
             // When one player holds all of the cards, it's game over
-            if (pile1Num === 52) {
+            if (pile1Num >= 52) {
                 gameOver("player1");
-            } else if (pile2Num === 52) {
+            } else if (pile2Num >= 52) {
                 gameOver("player2");
             }
         }
@@ -104,14 +104,12 @@ const compareCards = (card1, card2, code1, code2, code3, code4) => {
         fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/add/?cards=${code1},${code2},${code3},${code4}`);
         pile1.innerText = Number(pile1.innerText) + numOfCardsToAdd;
         pile2.innerText = Number(pile2.innerText) - numOfCardsDrawn;
-        console.log(`Subtracted ${numOfCardsDrawn} from player2`);
         result.innerText = "Player 1 Wins!";
         dealBtn.onclick = drawCards;
     } else if (card1Num < card2Num) {
         fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player2Pile/add/?cards=${code1},${code2},${code3},${code4}`);
         pile2.innerText = Number(pile2.innerText) + numOfCardsToAdd;
         pile1.innerText = Number(pile1.innerText) - numOfCardsDrawn;
-        console.log(`Subtracted ${numOfCardsDrawn} from player1`);
         result.innerText = "Player 2 Wins!";
         dealBtn.onclick = drawCards;
     } else {
@@ -179,29 +177,49 @@ const drawCardsForWarRound = async () => {
     }
 }
 
+// will be set to setInterval return value
+let colorChanger;
+
 const gameOver = (winner) => {
     result.innerText = "Game Over!";
+    dealBtn.innerText = "Play Again!";
     const colors = ["blue", "red", "green", "orange", "yellow", "purple", "pink"];
     let randomNum;
     if (winner === "player1") {
-        setInterval(() => {
+        colorChanger = setInterval(() => {
             let excludeNum = randomNum;
             while (randomNum === excludeNum) {
                 randomNum = Math.floor(Math.random() * colors.length);
             }
             pile1.style.backgroundColor = colors[randomNum];
         }, 800);
+        colorChanger;
     } else {
-        setInterval(() => {
+        colorChanger = setInterval(() => {
             let excludeNum = randomNum;
             while (randomNum === excludeNum) {
                 randomNum = Math.floor(Math.random() * colors.length);
             }
             pile2.style.backgroundColor = colors[randomNum];
         }, 800);
+        colorChanger;
     }
+    dealBtn.onclick = resetPlayingArea;
+}
+
+const resetPlayingArea = () => {
+    clearInterval(colorChanger);
+    pile1.style.backgroundColor = "#6b8e23";
+    pile2.style.backgroundColor = "#6b8e23";
+    pile1.innerText = 26;
+    pile2.innerText = 26;
+    player1Card.style.visibility = "hidden";
+    player2Card.style.visibility = "hidden";
+    result.innerText = "";
+    dealBtn.innerText = "Deal!";
+    dealBtn.onclick = drawCards;
+    shuffleAndDealDeck;
 }
 
 onload = shuffleAndDealDeck();
-
 dealBtn.onclick = drawCards;
