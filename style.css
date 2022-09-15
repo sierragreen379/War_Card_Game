@@ -17,6 +17,7 @@ body {
 #playing_area {
     margin: 20px auto 10px;
     padding: 20px;
+    min-height: 475px;
     width: 80%;
     border: 5px solid white;
     border-radius: 5px;
@@ -48,6 +49,16 @@ body {
     }
 }
 
+@media (max-width: 815px) {
+    #playing_area {
+        flex-direction: column;
+    }
+    #player1,
+    #player2 {
+        flex-direction: row;
+    }
+}
+
 #player1MainArea,
 #player2MainArea {
     position: relative;
@@ -56,7 +67,8 @@ body {
 #player1Card,
 #player2Card {
     visibility: hidden;
-    min-height: 315px;
+    max-height: 315px;
+    max-width: 225px;
 }
 
 #player1_extra_card,
@@ -95,6 +107,30 @@ body {
     font-size: 50px;
     background-color: #6b8e23;
     border-radius: 50%;
+}
+
+@media (max-width: 570px) {
+    #playing_area {
+        padding: 10px;
+    }
+    #player1Card,
+    #player2Card {
+        width: 150px;
+    }
+    #player1_extra_card,
+    #player2_extra_card {
+        height: auto;
+        width: 146px;
+        top: 16%;
+    }
+    .playing_card_back {
+        width: 100px;
+    }
+    #pile1,
+    #pile2 {
+        width: 75px;
+        font-size: 35px;
+    }
 }
 
 #result {

@@ -117,8 +117,8 @@ const compareCards = (card1, card2, code1, code2, code3, code4) => {
         dealBtn.onclick = drawCardsForWarRound;
         pile1.innerText = Number(pile1.innerText) - numOfCardsDrawn;
         pile2.innerText = Number(pile2.innerText) - numOfCardsDrawn;
-        numOfCardsDrawn--;
-        numOfCardsToAdd++;
+        numOfCardsToAdd += numOfCardsDrawn;
+        numOfCardsDrawn = 0;
     }
 
     // Reset number of cards to add to winning player's pile
