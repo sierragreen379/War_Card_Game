@@ -1,17 +1,11 @@
 * {
-    margin: 10px;
-    box-sizing: border-box;
     text-align: center;
     color: white;
-    font-family: Verdana, Tahoma, sans-serif
+    font-family: Verdana, Tahoma, sans-serif;
 }
 
 body {
     background-color: #1d561f;
-}
-
-#title {
-    color: white;
 }
 
 #playing_area {
@@ -33,16 +27,7 @@ body {
     justify-content: center;
 }
 
-@media (max-width: 1400px) {
-    #playing_area {
-        width: auto;
-    }
-}
-
-@media (max-width: 1100px) {
-    #playing_area {
-        width: fit-content;
-    }
+@media (max-width: 1200px) {
     #player1,
     #player2 {
         flex-direction: column;
@@ -62,6 +47,7 @@ body {
 #player1MainArea,
 #player2MainArea {
     position: relative;
+    margin: 10px;
 }
 
 #player1Card,
@@ -75,8 +61,8 @@ body {
 #player2_extra_card {
     visibility: hidden;
     position: absolute;
-    top: 12%;
-    left: -10%;
+    top: 20%;
+    left: -8%;
     height: 310px;
     width: auto;
     border-radius: 15px;
@@ -92,18 +78,18 @@ body {
 
 .playing_card_back {
     width: 150px;
-    border-radius: 5px;
-    margin: 0;
+    border-radius: 10px;
+    margin-top: 40%;
 }
 
 #pile1,
 #pile2 {
     position: absolute;
-    top: 28%;
-    left: 3%;
+    top: 30%;
+    left: 10%;
     width: 120px;
     color: black;
-    z-index: 1;
+    z-index: 0;
     font-size: 50px;
     background-color: #6b8e23;
     border-radius: 50%;
@@ -112,6 +98,7 @@ body {
 @media (max-width: 570px) {
     #playing_area {
         padding: 10px;
+        margin-bottom: 60px;
     }
     #player1Card,
     #player2Card {
@@ -121,27 +108,60 @@ body {
     #player2_extra_card {
         height: auto;
         width: 146px;
-        top: 16%;
+        top: 28%;
     }
     .playing_card_back {
         width: 100px;
     }
     #pile1,
     #pile2 {
+        left: 12%;
         width: 75px;
         font-size: 35px;
     }
 }
 
+@media (max-width: 400px) {
+    #player1Card,
+    #player2Card {
+        width: 125px;
+    }
+    #player1_extra_card,
+    #player2_extra_card {
+        width: 120px;
+        top: 31%;
+    }
+    .playing_card_back {
+        width: 80px;
+    }
+    #pile1,
+    #pile2 {
+        width: 60px;
+        font-size: 26px;
+    }
+}
+
 #result {
     width: 125px;
+    margin: 10px;
 }
 
 #deal_btn {
     padding: 10px;
+    margin: auto;
     border-radius: 5px;
     font-size: 20px;
-    background-color: white;
+    background-color: whitesmoke;
     color: black;
     cursor: pointer;
+}
+
+@media (max-width: 570px) {
+    #deal_btn {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 3;
+    }
 }
