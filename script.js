@@ -101,7 +101,7 @@ const compareCards = (card1, card2, code1, code2, code3, code4) => {
     numOfCardsToAdd++;
     numOfCardsDrawn++;
     if (card1Num > card2Num) {
-        fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/add/?cards=${code1},${code2},${code3},${code4}`);
+        fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/pile/player1Pile/add/?cards=${code1},${code2},${code3},${code4}`); //3S
         pile1.innerText = Number(pile1.innerText) + numOfCardsToAdd;
         pile2.innerText = Number(pile2.innerText) - numOfCardsDrawn;
         result.innerText = "Player 1 Wins!";
@@ -119,6 +119,20 @@ const compareCards = (card1, card2, code1, code2, code3, code4) => {
         pile2.innerText = Number(pile2.innerText) - numOfCardsDrawn;
         numOfCardsToAdd += numOfCardsDrawn;
         numOfCardsDrawn = 0;
+        // Check if each player has enough cards to draw. If either one doesn't, the other player wins the game.
+        if (pile1.innerText < 2) {
+            setTimeout(() => {
+                pile1.innerText = 0;
+                pile2.innerText = 52;
+            }, 1000);
+            setTimeout(gameOver("player2"), 2000);
+        } else if (pile2.innerText < 2) {
+            setTimeout(() => {
+                pile1.innerText = 52;
+                pile2.innerText = 0;
+            }, 1000);
+            setTimeout(gameOver("player1"), 2000);
+        }
     }
 
     // Reset number of cards to add to winning player's pile
@@ -181,30 +195,32 @@ const drawCardsForWarRound = async () => {
 let colorChanger;
 
 const gameOver = (winner) => {
-    result.innerText = "Game Over!";
-    dealBtn.innerText = "Play Again!";
-    const colors = ["blue", "red", "green", "orange", "yellow", "purple", "pink"];
-    let randomNum;
-    if (winner === "player1") {
-        colorChanger = setInterval(() => {
-            let excludeNum = randomNum;
-            while (randomNum === excludeNum) {
-                randomNum = Math.floor(Math.random() * colors.length);
-            }
-            pile1.style.backgroundColor = colors[randomNum];
-        }, 800);
-        colorChanger;
-    } else {
-        colorChanger = setInterval(() => {
-            let excludeNum = randomNum;
-            while (randomNum === excludeNum) {
-                randomNum = Math.floor(Math.random() * colors.length);
-            }
-            pile2.style.backgroundColor = colors[randomNum];
-        }, 800);
-        colorChanger;
+    return function () {
+        result.innerText = "Game Over!";
+        dealBtn.innerText = "Play Again!";
+        const colors = ["blue", "red", "green", "orange", "yellow", "purple"];
+        let randomNum;
+        if (winner === "player1") {
+            colorChanger = setInterval(() => {
+                let excludeNum = randomNum;
+                while (randomNum === excludeNum) {
+                    randomNum = Math.floor(Math.random() * colors.length);
+                }
+                pile1.style.backgroundColor = colors[randomNum];
+            }, 800);
+            colorChanger;
+        } else {
+            colorChanger = setInterval(() => {
+                let excludeNum = randomNum;
+                while (randomNum === excludeNum) {
+                    randomNum = Math.floor(Math.random() * colors.length);
+                }
+                pile2.style.backgroundColor = colors[randomNum];
+            }, 800);
+            colorChanger;
+        }
+        dealBtn.onclick = resetPlayingArea;
     }
-    dealBtn.onclick = resetPlayingArea;
 }
 
 const resetPlayingArea = () => {
