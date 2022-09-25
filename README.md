@@ -1,22 +1,19 @@
-# War ##The Card Game
+# War - the Card Game
 
 The classic game of War easily playable by a single person! Simply click the "Deal!" button, and watch as the computer draws for both players and adjusts their scores and decks accordingly.
 
-**Find the project here!** /https://sierragreen379.github.io/War_Card_Game/
+**Find the project here!** https://sierragreen379.github.io/War_Card_Game/
 
-![Photo of this War Card game project](./Assets/War_Card_Game_photo.png)
+![Photo of this War Card Game project](./Assets/War_Card_Game_photo.png)
 
 ## How It's Made:
 
-**Tech Used:** HTML, CSS, JavaScript
+**Tools Used:** HTML, CSS, JavaScript
 
 <!-- Write about how you built the project here. Include your work with the API. -->
 
-## Optimizations:
-
-<!-- Mention how you would rewrite the code to have more, smaller functions? -->
-<!-- Only mention things that you did optimize, not what you would like to do. Maybe. -->
 
 ## Lessons Learned:
-
-<!-- What did I learn while working on this project? How to work with a third-party API.  -->
+Some of the things I learned while building this project include:
+- How confusing large functions can get. Some of my functions are 40-50 lines long and include logic for several different things. This got overwhleming at times, and if I were to optimize the code better, I'd make a lot of smaller functions just to break it all up and make it more easily comprehendable.
+- How to work with a third-party API. This API was pretty easy to use as the documentation was pretty good. But there was still a lot of console.logging my actual return values so as to retrieve the correct thing. 
